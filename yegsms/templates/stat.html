@@ -1,0 +1,49 @@
+{% extends 'resources/base.html' %}{% load staticfiles %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+{% include "resources/navbar.html" %}
+<div class="container-fluid">
+  <div class="row">
+    {% include "resources/sidebar.html" %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h1 class="page-header">Hello {{ user.user.first_name }}, <small>here are the stats of your created surveys:</small></h1>
+      {% if statsList %}
+        <div>
+        {% for stats in statsList %}
+          <div>
+            <h2>{{ stats.obj.title }}<small>This survey was created on {{ stats.obj.dateCreated }}, and have {{ stats.questionsCount }} questions.</small></h2>
+            <p>This survey received a total of {{ stats.votes }} votes.</p>
+            <p>This survey was completed {{ stats.completedTimes }} times, by {{ stats.completedPeople }} people.</p>
+            <p>Below the detailment of the questions:</p>
+            {% for question in stats.questions %}
+              <h3>{{ question.obj.content }} [{{ question.obj.order }}]</h3>
+              <p>This multiple-choice question received {{ question.repliesCount }} replies.</p>
+                {% if question.replies %}
+                  <ul>
+                    {% for r in question.replies %}
+                    <li>
+                      <p>Option {{ r.obj.description }} [{{ r.obj.command }}] received {{ r.votesPercent }}({{ r.votes }}) of the total votes for this question.</p>
+                    </li>
+                    {% endfor %}
+                  </ul>  
+                {% else %}
+                  <p>This open question received those unique answers:</p>
+                  <ul>
+                    {% for op in question.openAnswers %}
+                    <li>
+                      <p>"{{ op.content }}", on {{ op.date }}.</p>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+        </div>
+      {% else %}
+        <div><h3>It seems you don't have any survey, come back when you do!</h3></div>
+      {% endif %}   
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'resources/base.html' %}{% load staticfiles %}
+{% block title %}Login{% endblock %}
+{% block extra-header %}
+<link rel="stylesheet" href="{% static "css/login.css" %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+  <form action="login/" method="post" class="form-signin">
+    {% csrf_token %}
+    {% if error %}
+      <h2 class="form-signin-heading">{{ error }}</h2>
+    {% endif %}
+    <small class="bg-danger"></small>
+    <label for="inputUsername" class="sr-only">Email address</label>
+    <input type="text" id="inputUsername" name="inputUsername" class="form-control" placeholder="Username" required autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  </form>
+</div> <!-- /container -->
+{% endblock %}

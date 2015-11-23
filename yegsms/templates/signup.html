@@ -1,0 +1,40 @@
+{% extends 'resources/base.html' %}{% load staticfiles %}
+{% block title %}Sign-up{% endblock %}
+{% block extra-header %}
+  <link href="{% static "css/forms.css" %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+{% include "resources/navbar.html" %}
+<div class="container-fluid">
+  	<h1 class="page-header">Sign up</h1>
+  	{% if info_form.non_field_errors %}
+  		<div class="form-errors">
+  		{% for error in info_form.non_field_errors %}
+  			<p>{{ error }}</p>
+  		{% endfor %}
+  		</div>
+  	{% endif %}
+    <form action="/signup/" method="post" class="form-signup">
+	    {% csrf_token %}
+	    {% for hidden in user_form.hidden_fields %}
+	      {{ hidden }}
+	    {% endfor %}
+	    {% for hidden in info_form.hidden_fields %}
+	      {{ hidden }}
+	    {% endfor %}
+	    {% for field in user_form %}
+	      <div class="fieldWrapper">
+	        {{ field.errors }}
+	        {{ field.label_tag }} {{ field }}
+	      </div>
+	    {% endfor %}
+	    {% for field in info_form %}
+	      <div class="fieldWrapper">
+	        {{ field.errors }}
+	        {{ field.label_tag }} {{ field }}
+	      </div>
+	    {% endfor %}
+	    <input type="submit" name="submit" value="Register" />
+  	</form>
+</div>
+{% endblock %}

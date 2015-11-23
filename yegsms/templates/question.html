@@ -1,0 +1,64 @@
+{% extends 'resources/base.html' %}{% load staticfiles %}
+{% block title %}Surveys - {{ question.content }}{% endblock %}
+{% block content %}
+{% include "resources/navbar.html" %}
+<div class="container-fluid">
+  <div class="row">
+    {% include "resources/sidebar.html" %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h1 class="page-header">Question - {{ question.title }}</h1>
+        <div class="row">
+          <div class="col-md-2">Order:</div>
+          <div class="col-md-10">{{ question.order }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">Type:</div>
+          <div class="col-md-10">{{ question.get_type_display }}</div>
+        </div>
+        {% if not question.isOpenQuestion %}
+          <h2 class="page-header">Questions</h2>
+            <form action="" method="post" class="form-signin">
+              {% csrf_token %}
+              {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+              {% endfor %}
+              {% for field in form.visible_fields %}
+                <div class="fieldWrapper">
+                  {{ field.errors }}
+                  {{ field.label_tag }} {{ field }}
+                </div>
+              {% endfor %}
+              <input type="submit" name="submit" value="Add new option" />
+            </form>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Option</th>
+                    <th>Command</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% if question.getOptionsList %}
+                    {% for option in question.getOptionsList %}
+                    <tr>
+                      <td>{{ option.id }}</td>
+                      <td>{{ option.description }}</td>
+                      <td>{{ option.command }}</td>
+                      <td><a class="remove-input" href="options/{{ option.id }}/remove/" onClick="return confirm('Are you sure you want to remove the option {{ option.description }}?\nThis action cannot be undone.')">remove</a></td>
+                    </tr>
+                    {% endfor %}
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+          {% endif %}
+          <form>
+            {{ option_form }}
+          </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

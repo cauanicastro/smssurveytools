@@ -1,0 +1,35 @@
+{% extends 'resources/base.html' %}{% load staticfiles %}
+{% block extra-header %}
+  <link href="{% static "css/forms.css" %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+{% include "resources/navbar.html" %}
+<div class="container-fluid">
+  <div class="row">
+    {% include "resources/sidebar.html" %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h1 class="page-header">{% block heading %}{% endblock %}</h1>
+          {% if form.non_field_errors %}
+            <div class="form-errors">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+            </div>
+          {% endif %}
+          <form action="{% block url %}{% endblock %}" method="post" class="form-signin">
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+              {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+              <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+              </div>
+            {% endfor %}
+            <input type="submit" name="submit" value="Create" />
+          </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
